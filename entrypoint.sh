@@ -16,7 +16,8 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
 {
     "general": {
         "secret_key": "$SECRET_KEY",
-        "display_hidden": false
+        "display_hidden": false,
+        "force_ssl": true
     },
     "log": {
         "enable": true,
@@ -46,7 +47,7 @@ ln -sf "$STATE_DIR" /app/data/state
 
 # Set Filestash's external URL from OpenHost env vars
 if [ -n "$OPENHOST_ZONE_DOMAIN" ] && [ -n "$OPENHOST_APP_NAME" ]; then
-    export APPLICATION_URL="https://${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
+    export APPLICATION_URL="${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
 fi
 
 # Skip setup wizard (non-empty value bypasses the redirect)
