@@ -12,4 +12,4 @@ memory_mb = 256
 cpu_millicores = 500
 
 [data]
-app_data = true
+access_all_data = true

@@ -6,9 +6,38 @@ STATE_DIR="$DATA_DIR/state"
 
 mkdir -p "$STATE_DIR"
 
-# Copy default config on first run
-if [ ! -d "$STATE_DIR/config" ]; then
-    cp -r /app/data/state/config "$STATE_DIR/config"
+# Generate config on first run
+if [ ! -f "$STATE_DIR/config/config.json" ]; then
+    mkdir -p "$STATE_DIR/config"
+
+    SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 16)
+
+    cat > "$STATE_DIR/config/config.json" << EOCFG
+{
+    "general": {
+        "secret_key": "$SECRET_KEY",
+        "display_hidden": false
+    },
+    "log": {
+        "enable": true,
+        "level": "INFO",
+        "telemetry": false
+    },
+    "middleware": {
+        "identity_provider": {
+            "type": "passthrough",
+            "params": "{\"type\":\"passthrough\",\"strategy\":\"direct\"}"
+        },
+        "attribute_mapping": {
+            "related_backend": "Files",
+            "params": "{\"Files\":{\"type\":\"local\",\"password\":\"$SECRET_KEY\",\"path\":\"/data/\"}}"
+        }
+    },
+    "connections": [
+        {"type": "local", "label": "Files", "path": "/data/"}
+    ]
+}
+EOCFG
 fi
 
 # Symlink state to persistent storage
@@ -19,5 +48,11 @@ ln -sf "$STATE_DIR" /app/data/state
 if [ -n "$OPENHOST_ZONE_DOMAIN" ] && [ -n "$OPENHOST_APP_NAME" ]; then
     export APPLICATION_URL="https://${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
 fi
+
+# Skip setup wizard (non-empty value bypasses the redirect)
+export ADMIN_PASSWORD="openhost-managed"
+
+# Keep middleware params as plaintext in config
+export CONFIG_ENCRYPT=false
 
 exec "$@"
