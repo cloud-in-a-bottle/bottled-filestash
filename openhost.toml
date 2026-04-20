@@ -1,0 +1,15 @@
+[app]
+name = "filestash"
+version = "0.1.0"
+description = "Web-based file manager supporting multiple storage backends (S3, SFTP, FTP, WebDAV, Git, etc.)"
+
+[runtime.container]
+image = "Dockerfile"
+port = 8334
+
+[resources]
+memory_mb = 256
+cpu_millicores = 500
+
+[data]
+app_data = true
