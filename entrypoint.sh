@@ -6,7 +6,9 @@ STATE_DIR="$DATA_DIR/state"
 
 mkdir -p "$STATE_DIR"
 
-# Generate config on first run
+EXTERNAL_HOST="${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
+
+# Generate Filestash config on first run
 if [ ! -f "$STATE_DIR/config/config.json" ]; then
     mkdir -p "$STATE_DIR/config"
 
@@ -16,6 +18,7 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
 {
     "general": {
         "secret_key": "$SECRET_KEY",
+        "port": 8335,
         "display_hidden": true,
         "filepage_default_view": "list",
         "custom_css": ".component_sidebar h3, .component_sidebar a > div { text-transform: none !important; }"
@@ -46,10 +49,30 @@ fi
 rm -rf /app/data/state
 ln -sf "$STATE_DIR" /app/data/state
 
-# Skip setup wizard (non-empty value bypasses the redirect)
-export ADMIN_PASSWORD="openhost-managed"
+# nginx reverse proxy: rewrite Host header so Filestash's SecureOrigin check passes
+cat > /etc/nginx/conf.d/filestash.conf << EONGX
+server {
+    listen 8334;
+    client_max_body_size 0;
+    location / {
+        proxy_pass http://127.0.0.1:8335;
+        proxy_set_header Host ${EXTERNAL_HOST};
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_buffering off;
+        proxy_request_buffering off;
+    }
+}
+EONGX
+rm -f /etc/nginx/sites-enabled/default
+nginx
 
-# Keep middleware params as plaintext in config
+# Set hostname and skip setup wizard
+export APPLICATION_URL="$EXTERNAL_HOST"
+export FILESTASH_PORT=8335
+export ADMIN_PASSWORD="openhost-managed"
 export CONFIG_ENCRYPT=false
 
 exec "$@"
