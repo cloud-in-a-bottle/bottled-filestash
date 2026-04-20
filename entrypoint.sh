@@ -16,7 +16,8 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
 {
     "general": {
         "secret_key": "$SECRET_KEY",
-        "display_hidden": false
+        "display_hidden": false,
+        "custom_css": ".component_sidebar h3, .component_sidebar a > div { text-transform: none !important; }"
     },
     "log": {
         "enable": true,
