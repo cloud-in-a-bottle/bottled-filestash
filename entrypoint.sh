@@ -16,8 +16,7 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
 {
     "general": {
         "secret_key": "$SECRET_KEY",
-        "display_hidden": false,
-        "force_ssl": true
+        "display_hidden": false
     },
     "log": {
         "enable": true,
@@ -44,11 +43,6 @@ fi
 # Symlink state to persistent storage
 rm -rf /app/data/state
 ln -sf "$STATE_DIR" /app/data/state
-
-# Set Filestash's external URL from OpenHost env vars
-if [ -n "$OPENHOST_ZONE_DOMAIN" ] && [ -n "$OPENHOST_APP_NAME" ]; then
-    export APPLICATION_URL="${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
-fi
 
 # Skip setup wizard (non-empty value bypasses the redirect)
 export ADMIN_PASSWORD="openhost-managed"
