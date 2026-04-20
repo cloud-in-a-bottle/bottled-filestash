@@ -49,25 +49,15 @@ fi
 rm -rf /app/data/state
 ln -sf "$STATE_DIR" /app/data/state
 
-# nginx reverse proxy: rewrite Host header so Filestash's SecureOrigin check passes
-cat > /etc/nginx/conf.d/filestash.conf << EONGX
-server {
-    listen 8334;
-    client_max_body_size 0;
-    location / {
-        proxy_pass http://127.0.0.1:8335;
-        proxy_set_header Host ${EXTERNAL_HOST};
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_buffering off;
-        proxy_request_buffering off;
+# Caddy reverse proxy: rewrite Host header so Filestash's SecureOrigin check passes
+cat > /etc/caddy/Caddyfile << EOCADDY
+:8334 {
+    reverse_proxy 127.0.0.1:8335 {
+        header_up Host ${EXTERNAL_HOST}
     }
 }
-EONGX
-rm -f /etc/nginx/sites-enabled/default
-nginx
+EOCADDY
+caddy start --config /etc/caddy/Caddyfile
 
 # Set hostname and skip setup wizard
 export APPLICATION_URL="$EXTERNAL_HOST"
