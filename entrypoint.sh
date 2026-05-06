@@ -45,6 +45,12 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
 EOCFG
 fi
 
+# Extract password the local backend will receive via attribute_mapping; the
+# local backend's Init() rejects it unless it matches LOCAL_BACKEND_SECRET (the
+# bcrypt-against-auth.admin path doesn't apply since auth.admin is plaintext).
+LOCAL_BACKEND_SECRET=$(sed -n 's/.*\\"password\\":\\"\([^\\]*\)\\".*/\1/p' "$STATE_DIR/config/config.json" | head -n1)
+export LOCAL_BACKEND_SECRET
+
 # Symlink state to persistent storage
 rm -rf /app/data/state
 ln -sf "$STATE_DIR" /app/data/state
