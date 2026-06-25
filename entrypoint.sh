@@ -70,7 +70,7 @@ caddy validate --config /etc/caddy/Caddyfile
 caddy start --config /etc/caddy/Caddyfile
 
 # Set hostname and skip setup wizard
-export APPLICATION_URL="https://$EXTERNAL_HOST"
+export APPLICATION_URL="$EXTERNAL_HOST"
 export FILESTASH_PORT=8335
 export ADMIN_PASSWORD="openhost-managed"
 export CONFIG_ENCRYPT=false
