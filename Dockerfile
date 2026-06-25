@@ -1,8 +1,11 @@
-FROM machines/filestash
+FROM machines/filestash@sha256:5348a9f12780379929999d08fa1423d5fd820fd5b1aed6591533681538f94646
 
+ARG TARGETARCH=amd64
 USER root
 
-RUN curl -sL "https://caddyserver.com/api/download?os=linux&arch=amd64" -o /usr/local/bin/caddy && \
+# Caddy v2.9.1 — bump intentionally after testing
+RUN apk add --no-cache jq openssl && \
+    curl -fsSL "https://caddyserver.com/api/download?os=linux&arch=${TARGETARCH}&version=v2.9.1" -o /usr/local/bin/caddy && \
     chmod +x /usr/local/bin/caddy && \
     mkdir -p /etc/caddy
 
