@@ -56,8 +56,11 @@ export LOCAL_BACKEND_SECRET
 # Symlink state to persistent storage; guard against accidentally clobbering
 # a real directory if the container ever ran without the persistent volume.
 if [ -e /app/data/state ] && [ ! -L /app/data/state ]; then
-    echo "ERROR: /app/data/state exists and is not a symlink; refusing to overwrite" >&2
-    exit 1
+    if [ -n "$(find /app/data/state -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
+        echo "ERROR: /app/data/state is a non-empty directory; refusing to overwrite" >&2
+        exit 1
+    fi
+    rm -rf /app/data/state
 fi
 rm -f /app/data/state
 ln -sf "$STATE_DIR" /app/data/state
