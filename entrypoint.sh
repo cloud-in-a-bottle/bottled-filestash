@@ -6,13 +6,13 @@ STATE_DIR="$DATA_DIR/state"
 
 mkdir -p "$STATE_DIR"
 
-EXTERNAL_HOST="${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
+EXTERNAL_HOST="${EXTERNAL_HOST:-${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}}"
 
 # Generate Filestash config on first run
 if [ ! -f "$STATE_DIR/config/config.json" ]; then
     mkdir -p "$STATE_DIR/config"
 
-    SECRET_KEY=$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -A n -t x1 | tr -d ' \n')
+    SECRET_KEY=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32)
 
     # Use jq so special characters in values can never corrupt the JSON
     jq -n \
