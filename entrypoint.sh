@@ -12,7 +12,7 @@ EXTERNAL_HOST="${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}"
 if [ ! -f "$STATE_DIR/config/config.json" ]; then
     mkdir -p "$STATE_DIR/config"
 
-    SECRET_KEY=$(openssl rand -hex 32)
+    SECRET_KEY=$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -A n -t x1 | tr -d ' \n')
 
     # Use jq so special characters in values can never corrupt the JSON
     jq -n \
