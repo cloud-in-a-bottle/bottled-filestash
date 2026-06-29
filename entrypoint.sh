@@ -8,7 +8,7 @@ mkdir -p "$STATE_DIR"
 
 EXTERNAL_HOST="${EXTERNAL_HOST:-${OPENHOST_APP_NAME}.${OPENHOST_ZONE_DOMAIN}}"
 
-# Generate Filestash config on first run
+# Generate Filestash config on first run; patch managed sections on every run
 if [ ! -f "$STATE_DIR/config/config.json" ]; then
     mkdir -p "$STATE_DIR/config"
 
@@ -45,6 +45,30 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
           {"type": "local", "label": "Files", "path": "/data/"}
         ]
       }' > "$STATE_DIR/config/config.json"
+else
+    # Existing config: extract the secret key so the local backend stays consistent,
+    # then overwrite only the managed sections (auth plumbing) in case they're stale.
+    SECRET_KEY=$(jq -r '
+        try (.middleware.attribute_mapping.params | if type == "string" then fromjson else . end | .Files.password)
+        // .general.secret_key
+        // empty
+    ' "$STATE_DIR/config/config.json")
+
+    [ -z "$SECRET_KEY" ] && SECRET_KEY=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32)
+
+    jq --arg secret_key "$SECRET_KEY" '
+        .general.port = 8335 |
+        .middleware.identity_provider = {
+            "type": "passthrough",
+            "params": ({"type":"passthrough","strategy":"direct"} | tostring)
+        } |
+        .middleware.attribute_mapping = {
+            "related_backend": "Files",
+            "params": ({"Files":{"type":"local","password":$secret_key,"path":"/data/"}} | tostring)
+        } |
+        .connections = [{"type": "local", "label": "Files", "path": "/data/"}]
+    ' "$STATE_DIR/config/config.json" > /tmp/config_patch.json && \
+    mv /tmp/config_patch.json "$STATE_DIR/config/config.json"
 fi
 
 # Extract the secret key the local backend will receive via attribute_mapping;
