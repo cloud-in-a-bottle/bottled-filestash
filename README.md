@@ -51,3 +51,7 @@ just build  # build the image only
 ```
 
 Local data is written to `test-data/` (gitignored).
+
+## License
+
+Filestash is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). The container image built from this repo is distributed under that license. The packaging files original to this repository are additionally available under the MIT License. See LICENSE and NOTICE for details.
