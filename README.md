@@ -6,23 +6,58 @@
 
 Filestash gives you a browser-based interface to your files. It works on any browser, no client software required.
 
-**Browsing and organizing** — browse directories, create and delete folders, rename files and folders, sort by name, date, or size, toggle hidden files.
+**Browsing and organizing.** Browse directories, create and delete folders, rename files and folders, sort by name, date, or size, toggle hidden files.
 
-**Uploading and downloading** — drag-and-drop or file-picker upload; download any file or folder as a zip.
+**Uploading and downloading.** Drag-and-drop or file-picker upload; download any file or folder as a zip.
 
-**Previews** — renders inline without downloading: images, video, audio, PDFs, text and code (with syntax highlighting), Markdown (rendered), and more.
+**Previews.** Renders inline without downloading: images, video, audio, PDFs, text and code (with syntax highlighting), Markdown (rendered), and more.
 
-**Editing** — text files and code can be edited directly in the browser and saved back.
+**Editing.** Text files and code can be edited directly in the browser and saved back.
 
-**Sharing** — any file or folder can be shared via a public link. The link works without logging in and grants read-only access to that path.
+**Sharing.** Any file or folder can be shared via a link that works without logging in. Read the sharing section below before using it.
 
 ## Access
 
-All routes require the zone owner to be logged in. Share links are the exception — they bypass auth and give anyone with the link read-only access to the specific file or folder.
+Browsing, uploading, editing and the admin panel all require the zone owner to be
+logged in. Anonymous requests to those paths are redirected to the zone login.
+
+Share links are the deliberate exception. `openhost.toml` lists the specific paths
+a share recipient needs in `public_paths`, so a person with a share link can load
+the share page and read what it points at without an account on your zone.
+
+## Sharing, and what it costs you
+
+A share link is a bearer token. Anyone holding the link can read that share, and
+that is the whole of the access control. Specifically:
+
+- The share id in the URL is the credential. There is no second check tied to the
+  recipient, so a link forwarded to someone else keeps working.
+- The proof cookie a recipient picks up is not bound to one share. Somebody who
+  holds any share link and also learns a second share's id can read that second
+  share too.
+- Filestash generates ids of about seven characters, roughly 42 bits. That is far
+  short of a random token (a UUID is 122 bits), and neither Filestash nor the zone
+  rate-limits attempts, so ids are not resistant to a determined guessing attack.
+
+What a share recipient cannot do, verified against a live deployment: reach
+anything outside the shared path. Requests resolve relative to the share root,
+`..` is normalised back to it, and absolute paths to other apps' data, the zone
+secrets store and the instance identity keys all fail. A read-only share also
+cannot be written to. Without a share credential every one of the opened paths
+returns 401 from Filestash itself.
+
+The practical guidance: treat a share link as public the moment you send it, share
+the narrowest path that does the job, and delete shares when you are done with
+them. Because this app is mounted over the zone's whole volume (see Storage), do
+not share a directory near the root.
+
+If you would rather not carry this risk, remove the `[routing]` section from
+`openhost.toml` and redeploy. Sharing stops working and the app becomes
+owner-only again.
 
 ## Storage
 
-Files are stored at `/data/` in the zone's persistent volume — the same root shared across all apps that request `access_all_data`. The app's own state (config, session keys) lives at `/data/app_data/filestash/` and is kept separate from your files.
+Files are stored at `/data/` in the zone's persistent volume, the same root shared across all apps that request `access_all_data`. The app's own state (config, session keys) lives at `/data/app_data/filestash/` and is kept separate from your files.
 
 Data survives app redeployments and container restarts.
 
