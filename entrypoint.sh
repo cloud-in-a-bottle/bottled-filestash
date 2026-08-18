@@ -93,10 +93,14 @@ EOCADDY
 caddy validate --config /etc/caddy/Caddyfile
 caddy start --config /etc/caddy/Caddyfile
 
-# Set hostname and skip setup wizard
+# Set hostname and skip setup wizard.
+# ADMIN_PASSWORD must be a bcrypt hash: Filestash's admin login does
+# bcrypt.CompareHashAndPassword against the stored value, so a plaintext
+# string always fails verification.  The password for the admin panel is
+# "openhost-managed" (bcrypt cost 12).
 export APPLICATION_URL="$EXTERNAL_HOST"
 export FILESTASH_PORT=8335
-export ADMIN_PASSWORD="openhost-managed"
+export ADMIN_PASSWORD='$2b$12$qlq9zf0CYymfqXFfTLb05.Kh2lPmuTxKyLhQDzngO1ltUPAzyc31q'
 export CONFIG_ENCRYPT=false
 
 exec "$@"
