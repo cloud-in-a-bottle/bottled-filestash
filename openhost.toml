@@ -7,7 +7,6 @@ description = "Web-based file manager supporting multiple storage backends (S3, 
 image = "Dockerfile"
 port = 8334
 
-[routing]
 # Share links are meant for people who have no account on this zone. With every
 # path owner-gated the router sent them to the login page, so the feature could
 # not be used at all.
@@ -24,19 +23,20 @@ port = 8334
 #
 # Read the sharing section of the README before enabling this: a share link is a
 # bearer token, and anyone who has or guesses one can read that share.
-public_paths = [
-    "/s",
-    "/assets",
-    "/custom.css",
-    "/overrides",
-    "/api/config",
-    "/api/plugin",
-    "/api/session",
-    "/api/share",
-    "/api/files/cat",
-    "/api/files/ls",
-    "/api/metadata/search",
-]
+# [routing]
+# public_paths = [
+#     "/s",
+#     "/assets",
+#     "/custom.css",
+#     "/overrides",
+#     "/api/config",
+#     "/api/plugin",
+#     "/api/session",
+#     "/api/share",
+#     "/api/files/cat",
+#     "/api/files/ls",
+#     "/api/metadata/search",
+# ]
 
 [resources]
 memory_mb = 256

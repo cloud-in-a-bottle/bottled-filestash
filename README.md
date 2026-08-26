@@ -14,7 +14,7 @@ Filestash gives you a browser-based interface to your files. It works on any bro
 
 **Editing.** Text files and code can be edited directly in the browser and saved back.
 
-**Sharing.** Any file or folder can be shared via a link that works without logging in. Read the sharing section below before using it.
+**Sharing.** Any file or folder can be shared via a link that works without logging in. This is disabled by default; read the sharing section below before enabling it.
 
 ## Access
 
@@ -51,9 +51,8 @@ the narrowest path that does the job, and delete shares when you are done with
 them. Because this app is mounted over the zone's whole volume (see Storage), do
 not share a directory near the root.
 
-If you would rather not carry this risk, remove the `[routing]` section from
-`openhost.toml` and redeploy. Sharing stops working and the app becomes
-owner-only again.
+This risk is why sharing is disabled by default. To enable the default it, uncomment
+the `[routing]` section of openhost.toml and redeploy. 
 
 ## Storage
 
