@@ -7,16 +7,12 @@ description = "Web-based file manager supporting multiple storage backends (S3, 
 image = "Dockerfile"
 port = 8334
 
+[routing]
 # Share links are meant for people who have no account on this zone. With every
-# path owner-gated the router sends them to the login page, so the feature cannot
-# be used unless the paths below are made public.
+# path owner-gated the router sent them to the login page, so the feature could
+# not be used at all.
 #
-# Sharing is currently disabled: every route is owner-only. To enable it,
-# uncomment the [routing] section below and redeploy. Read the sharing section of
-# the README first: a share link is a bearer token, and anyone who has or guesses
-# one can read that share.
-#
-# The list opens only what the share view needs:
+# Open only what the share view needs:
 #   /s                                    the share page and its file stream
 #   /assets, /custom.css, /overrides      static frontend files
 #   /api/config, /api/plugin, /api/session   SPA bootstrap
@@ -26,20 +22,21 @@ port = 8334
 # Everything else stays gated, including /files/, /api/files/mkdir, /api/files/rm,
 # /api/files/mv and the whole admin panel.
 #
-# [routing]
-# public_paths = [
-#     "/s",
-#     "/assets",
-#     "/custom.css",
-#     "/overrides",
-#     "/api/config",
-#     "/api/plugin",
-#     "/api/session",
-#     "/api/share",
-#     "/api/files/cat",
-#     "/api/files/ls",
-#     "/api/metadata/search",
-# ]
+# Read the sharing section of the README before enabling this: a share link is a
+# bearer token, and anyone who has or guesses one can read that share.
+public_paths = [
+    "/s",
+    "/assets",
+    "/custom.css",
+    "/overrides",
+    "/api/config",
+    "/api/plugin",
+    "/api/session",
+    "/api/share",
+    "/api/files/cat",
+    "/api/files/ls",
+    "/api/metadata/search",
+]
 
 [resources]
 memory_mb = 256

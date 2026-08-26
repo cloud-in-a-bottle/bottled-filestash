@@ -14,19 +14,16 @@ Filestash gives you a browser-based interface to your files. It works on any bro
 
 **Editing.** Text files and code can be edited directly in the browser and saved back.
 
-**Sharing.** Any file or folder can be shared via a link that works without logging in. This is disabled by default; read the sharing section below before enabling it.
+**Sharing.** Any file or folder can be shared via a link that works without logging in. Read the sharing section below before using it.
 
 ## Access
 
-Every route requires the zone owner to be logged in. Anonymous requests are
-redirected to the zone login, so by default nothing on this app is reachable from
-the public internet.
+Browsing, uploading, editing and the admin panel all require the zone owner to be
+logged in. Anonymous requests to those paths are redirected to the zone login.
 
-Share links are the one feature that needs an exception: a share recipient has no
-account on your zone, so the paths the share view uses must be public for the
-feature to work. `openhost.toml` carries that list of paths, commented out. To
-enable sharing, uncomment the `[routing]` section there and redeploy — but read
-the next section first.
+Share links are the deliberate exception. `openhost.toml` lists the specific paths
+a share recipient needs in `public_paths`, so a person with a share link can load
+the share page and read what it points at without an account on your zone.
 
 ## Sharing, and what it costs you
 
@@ -54,8 +51,8 @@ the narrowest path that does the job, and delete shares when you are done with
 them. Because this app is mounted over the zone's whole volume (see Storage), do
 not share a directory near the root.
 
-This risk is why sharing ships disabled. To return to the default after enabling
-it, comment the `[routing]` section back out and redeploy; the app becomes
+If you would rather not carry this risk, remove the `[routing]` section from
+`openhost.toml` and redeploy. Sharing stops working and the app becomes
 owner-only again.
 
 ## Storage
