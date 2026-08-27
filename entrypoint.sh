@@ -26,6 +26,11 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
           "filepage_default_view": "list",
           "custom_css": $css
         },
+        "features": {
+          "share": {
+            "enable": false
+          }
+        },
         "log": {
           "enable": true,
           "level": "INFO",
@@ -58,6 +63,7 @@ else
 
     jq --arg secret_key "$SECRET_KEY" '
         .general.port = 8335 |
+        .features.share.enable = false |
         .middleware.identity_provider = {
             "type": "passthrough",
             "params": ({"type":"passthrough","strategy":"direct"} | tostring)

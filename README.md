@@ -14,16 +14,18 @@ Filestash gives you a browser-based interface to your files. It works on any bro
 
 **Editing.** Text files and code can be edited directly in the browser and saved back.
 
-**Sharing.** Any file or folder can be shared via a link that works without logging in. This is disabled by default; read the sharing section below before enabling it.
+**Sharing.** Any file or folder can be shared via a link that works without logging in. Sharing is disabled by default in Filestash; read the sharing section below before enabling it.
 
 ## Access
 
 Browsing, uploading, editing and the admin panel all require the zone owner to be
 logged in. Anonymous requests to those paths are redirected to the zone login.
 
-Share links are the deliberate exception. `openhost.toml` lists the specific paths
-a share recipient needs in `public_paths`, so a person with a share link can load
-the share page and read what it points at without an account on your zone.
+Share links are the deliberate exception when enabled. `openhost.toml` lists the
+specific paths a share recipient needs in `public_paths`, so a person with a share
+link can load the share page and read what it points at without an account on your
+zone. The container entrypoint sets Filestash's `features.share.enable` setting to
+`false` on every startup; enabling sharing requires changing the image configuration.
 
 ## Sharing, and what it costs you
 
@@ -51,8 +53,9 @@ the narrowest path that does the job, and delete shares when you are done with
 them. Because this app is mounted over the zone's whole volume (see Storage), do
 not share a directory near the root.
 
-This risk is why sharing is disabled by default. To enable the default it, uncomment
-the `[routing]` section of openhost.toml and redeploy. 
+This risk is why sharing is disabled by default. The router paths remain configured,
+but Filestash rejects share requests while `features.share.enable` is `false`. The
+setting is package-managed and cannot be enabled through Filestash's admin UI.
 
 ## Storage
 
