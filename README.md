@@ -57,7 +57,7 @@ owner-only again.
 
 ## Storage
 
-Files are stored at `/data/` in the zone's persistent volume, the same root shared across all apps that request `access_all_data`. The app's own state (config, session keys) lives at `/data/app_data/filestash/` and is kept separate from your files.
+Files are stored at `/data/` in the zone's persistent volume, the same root shared across all apps that request `access_all_app_data`. The app's own state (config, session keys) lives at `/data/app_data/filestash/` and is kept separate from your files.
 
 Data survives app redeployments and container restarts.
 
