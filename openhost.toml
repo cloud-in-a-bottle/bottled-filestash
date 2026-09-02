@@ -7,23 +7,6 @@ description = "Web-based file manager supporting multiple storage backends (S3, 
 image = "Dockerfile"
 port = 8334
 
-[routing]
-# These routes support Filestash's share flow; authorization remains in Filestash.
-# Sharing is disabled by the container's managed features.share.enable setting.
-public_paths = [
-    "/s",
-    "/assets",
-    "/custom.css",
-    "/overrides",
-    "/api/config",
-    "/api/plugin",
-    "/api/session",
-    "/api/share",
-    "/api/files/cat",
-    "/api/files/ls",
-    "/api/metadata/search",
-]
-
 [resources]
 memory_mb = 256
 cpu_cores = 0.5
