@@ -29,4 +29,4 @@ memory_mb = 256
 cpu_cores = 0.5
 
 [data]
-access_all_data = true
+access_all_app_data = true
