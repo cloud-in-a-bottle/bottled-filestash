@@ -1,5 +1,5 @@
 [app]
-name = "file-browser"
+name = "filestash"
 version = "0.1.0"
 description = "Web-based file manager supporting multiple storage backends (S3, SFTP, FTP, WebDAV, Git, etc.)"
 
