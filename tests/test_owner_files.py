@@ -35,11 +35,11 @@ def test_owner_lands_in_zone_files_without_a_login_form(stack: OpenhostStack, pa
     page.goto(stack.url)
     # The passthrough identity provider signs the owner straight into the "Files" backend: no Filestash login page.
     expect(page).to_have_url(re.compile(r"/files/"), timeout=60_000)
-    expect(page.get_by_text("app_data", exact=True)).to_be_visible(timeout=30_000)
+    expect(page.get_by_role("link", name="directory app_data", exact=True)).to_be_visible(timeout=30_000)
     expect(page.locator("input[type=password]")).to_have_count(0)
 
     page.goto(f"{stack.url}/files/app_data/{stack.manifest.name}/")
-    expect(page.get_by_text(marker, exact=True)).to_be_visible(timeout=30_000)
+    expect(page.get_by_text(marker, exact=True).first).to_be_visible(timeout=30_000)
 
 
 def test_sharing_is_disabled(stack: OpenhostStack) -> None:
