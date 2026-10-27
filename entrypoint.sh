@@ -39,7 +39,7 @@ if [ ! -f "$STATE_DIR/config/config.json" ]; then
         "middleware": {
           "identity_provider": {
             "type": "passthrough",
-            "params": ({"type":"passthrough","strategy":"direct"} | tostring)
+            "params": ({"type":"passthrough","strategy":"password_only"} | tostring)
           },
           "attribute_mapping": {
             "related_backend": "Files",
@@ -66,7 +66,7 @@ else
         .features.share.enable = false |
         .middleware.identity_provider = {
             "type": "passthrough",
-            "params": ({"type":"passthrough","strategy":"direct"} | tostring)
+            "params": ({"type":"passthrough","strategy":"password_only"} | tostring)
         } |
         .middleware.attribute_mapping = {
             "related_backend": "Files",
