@@ -39,7 +39,7 @@ def test_owner_lands_in_zone_files_without_a_login_form(stack: OpenhostStack, pa
     expect(page.locator("input[type=password]")).to_have_count(0)
 
     page.goto(f"{stack.url}/files/app_data/{stack.manifest.name}/")
-    expect(page.get_by_text(marker, exact=True).first).to_be_visible(timeout=30_000)
+    expect(page.get_by_role("link", name=re.compile(rf"^file {re.escape(marker)}"))).to_be_visible(timeout=30_000)
 
 
 def test_sharing_is_disabled(stack: OpenhostStack) -> None:
