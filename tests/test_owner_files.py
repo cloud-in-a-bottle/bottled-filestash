@@ -27,7 +27,7 @@ def _wait_for_app(stack: OpenhostStack) -> None:
 
 def test_owner_lands_in_zone_files_without_a_login_form(stack: OpenhostStack, page: Page) -> None:
     _wait_for_app(stack)
-    # A file another app wrote to its data dir; Filestash's root is the zone's data, so the owner can browse to it.
+    # A file in an app data dir: Filestash's root is the zone's data (all apps), so the owner can browse to it.
     marker = "upstream-coverage-marker.txt"
     (stack.data_dir / marker).write_text("hello\n")
 
