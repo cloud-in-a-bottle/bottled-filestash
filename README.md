@@ -45,6 +45,8 @@ Data survives app redeployments and container restarts.
 oh app deploy https://github.com/your-org/openhost-filestash --name file-browser --wait
 ```
 
+`cloudinabottle.toml` sets `prebuilt_image`, so Cloud in a Bottle pulls our signed prebuilt image (built by CI from each release tag) instead of building the Dockerfile. To fork and modify this app, comment out `prebuilt_image` so your instance builds from source.
+
 To update after pushing changes:
 
 ```bash
