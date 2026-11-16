@@ -1,6 +1,7 @@
 [app]
 name = "filestash"
-version = "1.0.0"
+version = "1.0.1"
+release_tag_format = "semver"
 description = "Web-based file manager supporting multiple storage backends (S3, SFTP, FTP, WebDAV, Git, etc.)"
 
 [runtime.container]
